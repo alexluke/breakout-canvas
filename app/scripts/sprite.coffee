@@ -16,10 +16,12 @@ define [
             texture.style.display = 'none'
             document.body.appendChild(texture)
 
-        constructor: (@width, @height) ->
-            @position = new Point 0,0
+        constructor: ->
             if not @texture
                 throw 'Sprite must set texture'
+            if not @position
+                @position = new Point 0, 0
+
 
         draw: (ctx) ->
             ctx.drawImage @texture, @position.x, @position.y

@@ -2,13 +2,14 @@ define [
     'sprite'
     'point'
 ], (Sprite, Point) ->
-    texture = Sprite.createTexture 50, 10, (ctx) ->
+    texture = Sprite.createTexture 10, 10, (ctx) ->
         ctx.fillStyle = 'rgb(255, 255, 255)'
-        ctx.fillRect 0, 0, 50, 10
+        ctx.beginPath()
+        ctx.arc 5, 5, 5, 0, Math.PI*2, false
+        ctx.fill()
 
-    class Paddle extends Sprite
+    class Ball extends Sprite
         constructor: (x, y) ->
             @texture = texture
             @position = new Point x, y
             super()
-
