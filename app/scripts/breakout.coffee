@@ -57,6 +57,15 @@ define [
                 @ball.speed.y *= -1
                 @ball.speed.x = ((@ball.x + Ball.texture.width / 2) - (@paddle.x + Paddle.texture.width / 2)) / 3
 
+            for block in @blocks
+                if @ball.intersects block
+                    @blocks[t..t] = [] if (t = @blocks.indexOf(block)) > -1
+                    @ball.speed.y *= -1
+                    break
+
+            if @blocks.length == 0
+                @resetLevel()
+
         draw: ->
             @ctx.fillStyle = 'rgb(100, 149, 237)'
             @ctx.fillRect 0, 0, @canvas.width, @canvas.height
