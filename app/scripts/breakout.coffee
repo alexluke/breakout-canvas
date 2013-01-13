@@ -1,10 +1,9 @@
 define [
     'game'
-    'point'
     'sprites/paddle'
     'sprites/ball'
     'sprites/block'
-], (Game, Point, Paddle, Ball, Block) ->
+], (Game, Paddle, Ball, Block) ->
     class Breakout extends Game
         init: ->
             @blockRows = 5
