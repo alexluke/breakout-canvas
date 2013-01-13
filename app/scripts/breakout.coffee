@@ -28,7 +28,7 @@ define [
             @running = false
 
         update: ->
-            @paddle.x = @mouse.x
+            @paddle.x = @mouse.x - Paddle.texture.width / 2
 
             if @paddle.x < 0
                 @paddle.x = 0
