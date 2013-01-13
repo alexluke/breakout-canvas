@@ -1,6 +1,4 @@
-define [
-    'point'
-], (Point) ->
+define ->
     class Sprite
         @createTexture: (width, height, create) ->
             texture = document.createElement('canvas')
@@ -19,9 +17,6 @@ define [
         constructor: ->
             if not @texture
                 throw 'Sprite must set texture'
-            if not @position
-                @position = new Point 0, 0
-
 
         draw: (ctx) ->
-            ctx.drawImage @texture, @position.x, @position.y
+            ctx.drawImage @texture, @x, @y

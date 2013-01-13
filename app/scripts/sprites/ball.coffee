@@ -1,11 +1,9 @@
 define [
     'sprite'
-    'point'
-], (Sprite, Point) ->
+], (Sprite) ->
     class Ball extends Sprite
-        constructor: (x, y) ->
+        constructor: (@x, @y) ->
             @texture = Ball.texture
-            @position = new Point x, y
             super()
 
     Ball.texture = Sprite.createTexture 10, 10, (ctx) ->

@@ -22,8 +22,8 @@ define [
 
         resetPaddle: ->
             @paddle = new Paddle @width / 2, @height - 20
-            ballX = @paddle.position.x + Paddle.texture.width / 2 - Ball.texture.width / 2
-            ballY = @paddle.position.y - Ball.texture.height
+            ballX = @paddle.x + Paddle.texture.width / 2 - Ball.texture.width / 2
+            ballY = @paddle.y - Ball.texture.height
             @ball = new Ball ballX, ballY
             @ballSpeed = 0
             @running = false
