@@ -27,6 +27,18 @@ define [
             @ballSpeed = 0
             @running = false
 
+        update: ->
+            @paddle.x = @mouse.x
+
+            if @paddle.x < 0
+                @paddle.x = 0
+            if @paddle.x > @canvas.width - Paddle.texture.width
+                @paddle.x = @canvas.width - Paddle.texture.width
+
+            if not @running
+                @ball.x = @paddle.x + Paddle.texture.width / 2 - Ball.texture.width / 2
+
+
         draw: ->
             @ctx.fillStyle = 'rgb(100, 149, 237)'
             @ctx.fillRect 0, 0, @canvas.width, @canvas.height

@@ -14,6 +14,9 @@ define [
             @skipTicks = 1000 / @fps
             @maxFrameSkip = 10
             @nextGameTick = (new Date).getTime()
+            @mouse =
+                x: 0
+                y: 0
 
             @init()
 
@@ -28,8 +31,15 @@ define [
             @draw(@ctx)
 
         start: ->
+            document.addEventListener 'mousemove', (e) =>
+                @mouse.x = e.pageX - @canvas.offsetLeft
+                @mouse.y = e.pageY - @canvas.offsetTop
+
             requestAnimationFrame =>
-                @run()
+                tick = =>
+                    @run()
+                    requestAnimationFrame tick
+                requestAnimationFrame tick
 
         init: ->
         draw: ->
