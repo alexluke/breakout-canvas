@@ -20,3 +20,8 @@ define ->
 
         draw: (ctx) ->
             ctx.drawImage @texture, @x, @y
+
+        intersects: (otherSprite) ->
+            withinX = @x + @texture.width > otherSprite.x and @x < otherSprite.x + otherSprite.texture.width
+            withinY = @y + @texture.height > otherSprite.y and @y < otherSprite.y + otherSprite.texture.height
+            return withinX and withinY

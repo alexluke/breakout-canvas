@@ -39,6 +39,8 @@ define [
                 if @mouse.leftButton
                     @running = true
                     @ball.launch()
+                else
+                    return
 
             @ball.x += @ball.speed.x
             @ball.y += @ball.speed.y
@@ -51,6 +53,9 @@ define [
                 @resetPaddle()
                 return
 
+            if @ball.intersects @paddle
+                @ball.speed.y *= -1
+                @ball.speed.x = ((@ball.x + Ball.texture.width / 2) - (@paddle.x + Paddle.texture.width / 2)) / 3
 
         draw: ->
             @ctx.fillStyle = 'rgb(100, 149, 237)'
