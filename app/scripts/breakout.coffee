@@ -6,7 +6,7 @@ define [
     'sprites/block'
 ], (Game, Point, Paddle, Ball, Block) ->
     class Breakout extends Game
-        constructor: (@width, @height) ->
+        init: ->
             @blockRows = 5
             @blockCols = 15
             @blocks = []
@@ -21,7 +21,7 @@ define [
             @resetPaddle()
 
         resetPaddle: ->
-            @paddle = new Paddle @width / 2, @height - 20
+            @paddle = new Paddle @canvas.width / 2, @canvas.height - 20
             ballX = @paddle.x + Paddle.texture.width / 2 - Ball.texture.width / 2
             ballY = @paddle.y - Ball.texture.height
             @ball = new Ball ballX, ballY
@@ -30,7 +30,7 @@ define [
 
         draw: ->
             @ctx.fillStyle = 'rgb(100, 149, 237)'
-            @ctx.fillRect 0, 0, @width, @height
+            @ctx.fillRect 0, 0, @canvas.width, @canvas.height
 
             block.draw(@ctx) for block in @blocks
             @paddle.draw(@ctx)

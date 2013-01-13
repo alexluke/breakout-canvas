@@ -3,12 +3,19 @@ define [
     'requestAnimationFrame'
 ], (requestAnimationFrame) ->
     class Game
-        constructor: ->
+        constructor: (canvasEl) ->
+            @canvas = document.getElementById(canvasEl)
+            if not @canvas.getContext
+                throw 'No canvas support'
+
+            @ctx = @canvas.getContext '2d'
             @loops = 0
             @fps = 60
             @skipTicks = 1000 / @fps
             @maxFrameSkip = 10
             @nextGameTick = (new Date).getTime()
+
+            @init()
 
         run: ->
             @loops = 0
@@ -20,10 +27,10 @@ define [
 
             @draw(@ctx)
 
-        start: (ctx) ->
-            @ctx = ctx
+        start: ->
             requestAnimationFrame =>
                 @run()
 
+        init: ->
         draw: ->
         update: ->
