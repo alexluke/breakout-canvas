@@ -17,6 +17,8 @@ define [
             @mouse =
                 x: 0
                 y: 0
+                leftButton: false
+                rightbutton: false
 
             @init()
 
@@ -34,6 +36,14 @@ define [
             document.addEventListener 'mousemove', (e) =>
                 @mouse.x = e.pageX - @canvas.offsetLeft
                 @mouse.y = e.pageY - @canvas.offsetTop
+
+            document.addEventListener 'mousedown', (e) =>
+                e.preventDefault()
+                @mouse.leftButton = true
+
+            document.addEventListener 'mouseup', (e) =>
+                e.preventDefault()
+                @mouse.leftButton = false
 
             requestAnimationFrame =>
                 tick = =>

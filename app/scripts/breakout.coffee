@@ -24,7 +24,6 @@ define [
             ballX = @paddle.x + Paddle.texture.width / 2 - Ball.texture.width / 2
             ballY = @paddle.y - Ball.texture.height
             @ball = new Ball ballX, ballY
-            @ballSpeed = 0
             @running = false
 
         update: ->
@@ -37,6 +36,20 @@ define [
 
             if not @running
                 @ball.x = @paddle.x + Paddle.texture.width / 2 - Ball.texture.width / 2
+                if @mouse.leftButton
+                    @running = true
+                    @ball.launch()
+
+            @ball.x += @ball.speed.x
+            @ball.y += @ball.speed.y
+
+            if @ball.y < 0
+                @ball.speed.y *= -1
+            if @ball.x < 0 or @ball.x > @canvas.width - Ball.texture.width
+                @ball.speed.x *= -1
+            if @ball.y > @canvas.height
+                @resetPaddle()
+                return
 
 
         draw: ->

@@ -6,6 +6,13 @@ define [
             @texture = Ball.texture
             super()
 
+            @speed =
+                x: 0
+                y: 0
+
+        launch: ->
+            @speed.y = -5
+
     Ball.texture = Sprite.createTexture 10, 10, (ctx) ->
         ctx.fillStyle = 'rgb(255, 255, 255)'
         ctx.beginPath()
