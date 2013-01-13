@@ -20,7 +20,6 @@ define [
                     x = 20 + cols * Block.texture.width
                     y = 20 + rows * Block.texture.height
                     @blocks.push new Block x, y
-            @score = 0
             @resetPaddle()
 
         resetPaddle: ->
@@ -30,6 +29,7 @@ define [
             ballY = @paddle.y - Ball.texture.height
             @ball = new Ball ballX, ballY
             @running = false
+            @score = 0
 
         addBonusBlock: ->
             index = Math.floor(Math.random() * @blocks.length)
