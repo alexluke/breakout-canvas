@@ -20,7 +20,8 @@ define [
             @resetPaddle()
 
         resetPaddle: ->
-            @paddle = new Paddle @canvas.width / 2, @canvas.height - 20
+            if not @paddle
+                @paddle = new Paddle @canvas.width / 2, @canvas.height - 20
             ballX = @paddle.x + Paddle.texture.width / 2 - Ball.texture.width / 2
             ballY = @paddle.y - Ball.texture.height
             @ball = new Ball ballX, ballY
