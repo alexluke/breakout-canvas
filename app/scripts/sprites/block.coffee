@@ -2,9 +2,12 @@ define [
     'sprite'
 ], (Sprite) ->
     class Block extends Sprite
+        @points = 10
         constructor: (@x, @y) ->
             @texture = Block.texture
             super()
+
+            @points = Block.points
 
     Block.texture = Sprite.createTexture 50, 20, (ctx) ->
         ctx.clearRect 0, 0, 50, 20

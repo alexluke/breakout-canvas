@@ -3,12 +3,15 @@ define [
     'sprites/paddle'
     'sprites/ball'
     'sprites/block'
-], (Game, Paddle, Ball, Block) ->
+    'sprites/bonusblock'
+], (Game, Paddle, Ball, Block, BonusBlock) ->
     class Breakout extends Game
         init: ->
             @blockRows = 5
             @blockCols = 15
             @blocks = []
+            @pointBonusChance = .001
+            @pointBonusDuration = 10
             @resetLevel()
 
         resetLevel: ->
@@ -17,6 +20,7 @@ define [
                     x = 20 + cols * Block.texture.width
                     y = 20 + rows * Block.texture.height
                     @blocks.push new Block x, y
+            @score = 0
             @resetPaddle()
 
         resetPaddle: ->
@@ -26,6 +30,17 @@ define [
             ballY = @paddle.y - Ball.texture.height
             @ball = new Ball ballX, ballY
             @running = false
+
+        addBonusBlock: ->
+            index = Math.floor(Math.random() * @blocks.length)
+            bonus = BonusBlock.upgrade @blocks[index]
+            @blocks[index] = bonus
+            setTimeout =>
+                index = @blocks.indexOf bonus
+                if index > -1
+                    @blocks[index] = @blocks[index].downgrade()
+            , @pointBonusDuration * 1000
+            return
 
         update: ->
             @paddle.x = @mouse.x - Paddle.texture.width / 2
@@ -62,10 +77,16 @@ define [
                 if @ball.intersects block
                     @blocks[t..t] = [] if (t = @blocks.indexOf(block)) > -1
                     @ball.speed.y *= -1
+                    @score += block.points
+                    console.log "Current points: #{ @score }"
                     break
 
             if @blocks.length == 0
                 @resetLevel()
+                return
+
+            if Math.random() < @pointBonusChance
+                @addBonusBlock()
 
         draw: ->
             @ctx.fillStyle = 'rgb(100, 149, 237)'
