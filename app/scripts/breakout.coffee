@@ -1,10 +1,11 @@
 define [
+    'game'
     'point'
     'sprites/paddle'
     'sprites/ball'
     'sprites/block'
-], (Point, Paddle, Ball, Block) ->
-    class Breakout
+], (Game, Point, Paddle, Ball, Block) ->
+    class Breakout extends Game
         constructor: (@width, @height) ->
             @blockRows = 5
             @blockCols = 15
@@ -18,7 +19,7 @@ define [
                     y = 20 + rows * Block.texture.height
                     @blocks.push new Block x, y
             @resetPaddle()
-                    
+
         resetPaddle: ->
             @paddle = new Paddle @width / 2, @height - 20
             ballX = @paddle.position.x + Paddle.texture.width / 2 - Ball.texture.width / 2
@@ -27,10 +28,10 @@ define [
             @ballSpeed = 0
             @running = false
 
-        draw: (ctx) ->
-            ctx.fillStyle = 'rgb(100, 149, 237)'
-            ctx.fillRect 0, 0, @width, @height
+        draw: ->
+            @ctx.fillStyle = 'rgb(100, 149, 237)'
+            @ctx.fillRect 0, 0, @width, @height
 
-            block.draw(ctx) for block in @blocks
-            @paddle.draw(ctx)
-            @ball.draw(ctx)
+            block.draw(@ctx) for block in @blocks
+            @paddle.draw(@ctx)
+            @ball.draw(@ctx)

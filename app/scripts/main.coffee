@@ -9,4 +9,4 @@ require [
     ctx = canvas.getContext '2d'
 
     game = new Breakout(canvas.width, canvas.height)
-    game.draw(ctx)
+    game.start(ctx)
