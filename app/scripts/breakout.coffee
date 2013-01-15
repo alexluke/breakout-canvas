@@ -42,7 +42,7 @@ define [
             , @pointBonusDuration * 1000
             return
 
-        update: ->
+        update: (delta) ->
             @paddle.x = @mouse.x - Paddle.texture.width / 2
 
             if @paddle.x < 0
@@ -58,8 +58,8 @@ define [
                 else
                     return
 
-            @ball.x += @ball.speed.x
-            @ball.y += @ball.speed.y
+            @ball.x += @ball.speed.x * delta
+            @ball.y += @ball.speed.y * delta
 
             if @ball.y < 0
                 @ball.speed.y *= -1
@@ -71,7 +71,7 @@ define [
 
             if @ball.intersects @paddle
                 @ball.speed.y *= -1
-                @ball.speed.x = ((@ball.x + Ball.texture.width / 2) - (@paddle.x + Paddle.texture.width / 2)) / 3
+                @ball.speed.x = ((@ball.x + Ball.texture.width / 2) - (@paddle.x + Paddle.texture.width / 2)) / 3 * delta
 
             for block in @blocks
                 if @ball.intersects block

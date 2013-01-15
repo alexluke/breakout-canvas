@@ -1,4 +1,3 @@
-# Adapted from http://nokarma.org/2011/02/02/javascript-game-development-the-game-loop/index.html
 define [
     'requestAnimationFrame'
 ], (requestAnimationFrame) ->
@@ -9,11 +8,7 @@ define [
                 throw 'No canvas support'
 
             @ctx = @canvas.getContext '2d'
-            @loops = 0
-            @fps = 60
-            @skipTicks = 1000 / @fps
-            @maxFrameSkip = 10
-            @nextGameTick = (new Date).getTime()
+            @targetFrameRate = 60
             @mouse =
                 x: 0
                 y: 0
@@ -21,16 +16,6 @@ define [
                 rightbutton: false
 
             @init()
-
-        run: ->
-            @loops = 0
-
-            while (new Date).getTime() > @nextGameTick and @loops < @maxFrameSkip
-                @update()
-                @nextGameTick += @skipTicks
-                @loops++
-
-            @draw(@ctx)
 
         start: ->
             document.addEventListener 'mousemove', (e) =>
@@ -47,9 +32,17 @@ define [
 
             requestAnimationFrame =>
                 tick = =>
-                    @run()
+                    @draw()
                     requestAnimationFrame tick
                 requestAnimationFrame tick
+
+            @lastUpdate = (new Date).getTime()
+            tick = =>
+                now = (new Date).getTime()
+                delta = (now - @lastUpdate) / (1000 / @targetFrameRate)
+                @lastUpdate = now
+                @update(delta)
+            setInterval tick, 1000 / @targetFrameRate
 
         init: ->
         draw: ->
