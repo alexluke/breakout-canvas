@@ -12,6 +12,7 @@ define [
             @blocks = []
             @pointBonusChance = .001
             @pointBonusDuration = 10
+            @backgroundTexture = document.getElementById 'background'
             @resetLevel()
 
         resetLevel: ->
@@ -89,8 +90,7 @@ define [
                 @addBonusBlock()
 
         draw: ->
-            @ctx.fillStyle = 'rgb(100, 149, 237)'
-            @ctx.fillRect 0, 0, @canvas.width, @canvas.height
+            @ctx.drawImage @backgroundTexture, 0, 0, @backgroundTexture.width, @backgroundTexture.height
 
             block.draw(@ctx) for block in @blocks
             @paddle.draw(@ctx)
