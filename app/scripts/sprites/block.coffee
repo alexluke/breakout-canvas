@@ -6,8 +6,8 @@ define [
         constructor: (@x, @y) ->
             choice = Math.random()
             @texture =
-                if choice < .33 then Block.greenTexture
-                else if choice < .66 then Block.yellowTexture
+                if choice < .33 then Block.blueTexture
+                else if choice < .66 then Block.greenTexture
                 else Block.redTexture
             super()
 
@@ -26,8 +26,8 @@ define [
             ctx.putImageData map, 0, 0
 
     Block.texture = document.getElementById 'block'
-    Block.greenTexture = colorBlock {r: 51, g: 109, b: 43}
-    Block.yellowTexture = colorBlock {r: 220, g: 181, b: 73}
-    Block.redTexture = colorBlock {r: 207, g: 66, b: 34}
+    Block.redTexture = colorBlock {r: 217, g: 80, b: 77}
+    Block.greenTexture = colorBlock {r: 254, g: 255, b: 4}
+    Block.blueTexture = colorBlock {r: 4, g: 102, b: 175}
 
     return Block
