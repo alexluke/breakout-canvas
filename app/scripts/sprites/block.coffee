@@ -4,16 +4,30 @@ define [
     class Block extends Sprite
         @points = 10
         constructor: (@x, @y) ->
-            @texture = Block.texture
+            choice = Math.random()
+            @texture =
+                if choice < .33 then Block.greenTexture
+                else if choice < .66 then Block.yellowTexture
+                else Block.redTexture
             super()
 
             @points = Block.points
 
-    Block.texture = Sprite.createTexture 50, 20, (ctx) ->
-        ctx.clearRect 0, 0, 50, 20
-        ctx.fillStyle = 'rgb(0, 0, 0)'
-        ctx.fillRect 2, 2, 46, 16
-        ctx.fillStyle = 'rgb(255, 255, 255)'
-        ctx.fillRect 3, 3, 44, 14
+    colorBlock = (color) ->
+        Sprite.createTexture Block.texture.width, Block.texture.height, (ctx) ->
+            ctx.drawImage Block.texture, 0, 0, Block.texture.width, Block.texture.height
+            map = ctx.getImageData 0, 0, Block.texture.width, Block.texture.height
+            data = map.data
+            for p in [0...data.length] by 4
+                if data[p] is 0 and data[p+1] is 0 and data[p+2] is 0
+                    data[p] = color.r
+                    data[p+1] = color.g
+                    data[p+2] = color.b
+            ctx.putImageData map, 0, 0
+
+    Block.texture = document.getElementById 'block'
+    Block.greenTexture = colorBlock {r: 51, g: 109, b: 43}
+    Block.yellowTexture = colorBlock {r: 220, g: 181, b: 73}
+    Block.redTexture = colorBlock {r: 207, g: 66, b: 34}
 
     return Block
