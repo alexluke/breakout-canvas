@@ -19,7 +19,7 @@ define ->
                 throw 'Sprite must set texture'
 
         draw: (ctx) ->
-            ctx.drawImage @texture, @x, @y
+            ctx.drawImage @texture, @x, @y, @texture.width, @texture.height
 
         intersects: (otherSprite) ->
             withinX = @x + @texture.width > otherSprite.x and @x < otherSprite.x + otherSprite.texture.width
