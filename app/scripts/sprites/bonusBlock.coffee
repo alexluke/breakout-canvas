@@ -31,15 +31,7 @@ define [
                 multiBonus++
                 points /= BonusBlock.multiplier
             ctx.globalAlpha = 0.2 + 0.1 * multiBonus
-            ctx.drawImage BonusBlock.textureOverlay, @x, @y
+            ctx.fillStyle = 'rgb(255, 0, 0)'
+            ctx.fillRect @x, @y, @width, @height
             ctx.restore()
 
-
-    BonusBlock.textureOverlay = Sprite.createTexture Block.texture.width, Block.texture.height, (ctx) ->
-        ctx.fillStyle = 'rgb(255, 0, 0)'
-        ctx.fillRect 0, 0, Block.texture.width, Block.texture.height
-
-        ctx.globalCompositeOperation = 'destination-atop'
-        ctx.drawImage Block.texture, 0, 0
-
-    return BonusBlock

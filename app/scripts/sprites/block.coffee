@@ -15,8 +15,8 @@ define [
 
     colorBlock = (color) ->
         Sprite.createTexture Block.texture.width, Block.texture.height, (ctx) ->
-            ctx.drawImage Block.texture, 0, 0, Block.texture.width, Block.texture.height
-            map = ctx.getImageData 0, 0, Block.texture.width, Block.texture.height
+            ctx.drawImage Block.texture, 0, 0, Block.texture.width, Block.texture.height, 0, 0, Block.texture.naturalWidth, Block.texture.naturalHeight
+            map = ctx.getImageData 0, 0, Block.texture.naturalWidth, Block.texture.naturalHeight, 0, 0, Block.texture.width, Block.texture.height
             data = map.data
             for p in [0...data.length] by 4
                 if data[p] is 0 and data[p+1] is 0 and data[p+2] is 0
