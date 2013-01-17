@@ -8,11 +8,14 @@ define [
     class Breakout extends Game
         init: ->
             @blockRows = 5
-            @blockCols = 15
+            @blockCols = 12
             @blocks = []
             @pointBonusChance = .001
             @pointBonusDuration = 10
+            @scorePanelWidth = 160
             @backgroundTexture = document.getElementById 'background'
+            @width = @canvas.width - @scorePanelWidth
+            @height = @canvas.height
             @resetLevel()
 
         resetLevel: ->
@@ -25,7 +28,7 @@ define [
 
         resetPaddle: ->
             if not @paddle
-                @paddle = new Paddle @canvas.width / 2, @canvas.height - 20
+                @paddle = new Paddle @width / 2, @height - 20
             ballX = @paddle.x + Paddle.texture.width / 2 - Ball.texture.width / 2
             ballY = @paddle.y - Ball.texture.height
             @ball = new Ball ballX, ballY
@@ -48,8 +51,8 @@ define [
 
             if @paddle.x < 0
                 @paddle.x = 0
-            if @paddle.x > @canvas.width - Paddle.texture.width
-                @paddle.x = @canvas.width - Paddle.texture.width
+            if @paddle.x > @width - Paddle.texture.width
+                @paddle.x = @width - Paddle.texture.width
 
             if not @running
                 @ball.x = @paddle.x + Paddle.texture.width / 2 - Ball.texture.width / 2
@@ -64,9 +67,9 @@ define [
 
             if @ball.y < 0
                 @ball.speed.y *= -1
-            if @ball.x < 0 or @ball.x > @canvas.width - Ball.texture.width
+            if @ball.x < 0 or @ball.x > @width - Ball.texture.width
                 @ball.speed.x *= -1
-            if @ball.y > @canvas.height
+            if @ball.y > @height
                 @resetPaddle()
                 return
 
@@ -79,7 +82,6 @@ define [
                     @blocks[t..t] = [] if (t = @blocks.indexOf(block)) > -1
                     @ball.speed.y *= -1
                     @score += block.points
-                    console.log "Current points: #{ @score }"
                     break
 
             if @blocks.length == 0
@@ -90,8 +92,27 @@ define [
                 @addBonusBlock()
 
         draw: ->
-            @ctx.drawImage @backgroundTexture, 0, 0, @backgroundTexture.width, @backgroundTexture.height
+            @ctx.drawImage @backgroundTexture, 0, 0, @width, @height
 
             block.draw(@ctx) for block in @blocks
             @paddle.draw(@ctx)
             @ball.draw(@ctx)
+
+            @drawScorePanel()
+
+        drawScorePanel: ->
+            @ctx.save()
+            @ctx.clearRect @canvas.width - @scorePanelWidth, 0, @scorePanelWidth, @canvas.height
+            @ctx.strokeStyle = 'rgb(0, 0, 0)'
+            @ctx.lineWidth = 4
+            @ctx.strokeRect @canvas.width - @scorePanelWidth + 2, 2, @scorePanelWidth - 4, @canvas.height - 4
+
+            @ctx.textAlign = 'center'
+            @ctx.font = '24pt sans-serif'
+            @ctx.fillText 'Score', @canvas.width - @scorePanelWidth / 2, 50
+
+            @ctx.font = '32pt sans-serif'
+            @ctx.fillStyle = 'rgb(4, 102, 175)'
+            @ctx.fillText @score, @canvas.width - @scorePanelWidth / 2, 100
+
+            @ctx.restore()
