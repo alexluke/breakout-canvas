@@ -59,6 +59,9 @@ define [
             if @paddle.x > @width - Paddle.texture.width
                 @paddle.x = @width - Paddle.texture.width
 
+            if Math.random() < @pointBonusChance
+                @addBonusBlock()
+
             if not @running
                 @ball.x = @paddle.x + Paddle.texture.width / 2 - Ball.texture.width / 2
                 if @mouse.leftButton
@@ -92,9 +95,6 @@ define [
             if @blocks.length == 0
                 @resetLevel()
                 return
-
-            if Math.random() < @pointBonusChance
-                @addBonusBlock()
 
         draw: ->
             @ctx.drawImage @backgroundTexture, 0, 0, @width, @height
