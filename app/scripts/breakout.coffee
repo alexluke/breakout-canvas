@@ -25,6 +25,7 @@ define [
                     y = 20 + rows * Block.texture.height
                     @blocks.push new Block x, y
             @resetPaddle()
+            @lives = 3
 
         resetPaddle: ->
             if not @paddle
@@ -33,7 +34,11 @@ define [
             ballY = @paddle.y - Ball.texture.height
             @ball = new Ball ballX, ballY
             @running = false
-            @score = 0
+            if @lives > 0
+                @lives -= 1
+            else
+                @score = 0
+                @lives = 3
 
         addBonusBlock: ->
             index = Math.floor(Math.random() * @blocks.length)
@@ -110,9 +115,13 @@ define [
             @ctx.textAlign = 'center'
             @ctx.font = '24pt sans-serif'
             @ctx.fillText 'Score', @canvas.width - @scorePanelWidth / 2, 50
+            @ctx.fillText 'Lives', @canvas.width - @scorePanelWidth / 2, 200
 
             @ctx.font = '32pt sans-serif'
             @ctx.fillStyle = 'rgb(4, 102, 175)'
             @ctx.fillText @score, @canvas.width - @scorePanelWidth / 2, 100
+            @ctx.fillText @lives, @canvas.width - @scorePanelWidth / 2, 250
+
+
 
             @ctx.restore()
