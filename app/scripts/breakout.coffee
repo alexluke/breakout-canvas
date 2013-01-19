@@ -16,6 +16,9 @@ define [
             @backgroundTexture = document.getElementById 'background'
             @width = @canvas.width - @scorePanelWidth
             @height = @canvas.height
+            @sounds =
+                ballHit: document.getElementById 'ballHit'
+                blockBreak: document.getElementById 'blockBreak'
             @resetLevel()
 
         resetLevel: ->
@@ -75,8 +78,10 @@ define [
 
             if @ball.y < 0
                 @ball.speed.y *= -1
+                @sounds.ballHit.play()
             if @ball.x < 0 or @ball.x > @width - Ball.texture.width
                 @ball.speed.x *= -1
+                @sounds.ballHit.play()
             if @ball.y > @height
                 @resetPaddle()
                 return
@@ -84,12 +89,14 @@ define [
             if @ball.intersects @paddle
                 @ball.speed.y *= -1
                 @ball.speed.x = ((@ball.x + Ball.texture.width / 2) - (@paddle.x + Paddle.texture.width / 2)) / 3 * delta
+                @sounds.ballHit.play()
 
             for block in @blocks
                 if @ball.intersects block
                     @blocks[t..t] = [] if (t = @blocks.indexOf(block)) > -1
                     @ball.speed.y *= -1
                     @score += block.points
+                    @sounds.blockBreak.play()
                     break
 
             if @blocks.length == 0
