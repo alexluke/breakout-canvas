@@ -18,10 +18,12 @@ define ->
             if not @texture
                 throw 'Sprite must set texture'
 
+            @alive = true
+
         draw: (ctx) ->
             ctx.drawImage @texture, @x, @y, @texture.width, @texture.height
 
         intersects: (otherSprite) ->
             withinX = @x + @texture.width > otherSprite.x and @x < otherSprite.x + otherSprite.texture.width
             withinY = @y + @texture.height > otherSprite.y and @y < otherSprite.y + otherSprite.texture.height
-            return withinX and withinY
+            return withinX and withinY and otherSprite.alive

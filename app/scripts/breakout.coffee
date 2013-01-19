@@ -43,6 +43,7 @@ define [
 
         addBonusBlock: ->
             index = Math.floor(Math.random() * @blocks.length)
+            return if not @blocks[index].alive
             bonus = BonusBlock.upgrade @blocks[index]
             @blocks[index] = bonus
             setTimeout =>
@@ -89,13 +90,24 @@ define [
                 @ball.speed.x = ((@ball.x + Ball.texture.width / 2) - (@paddle.x + Paddle.texture.width / 2)) / 3 * delta
                 Sound.play 'ballHit'
 
-            for block in @blocks
-                if @ball.intersects block
-                    @blocks[t..t] = [] if (t = @blocks.indexOf(block)) > -1
+            toRemove = []
+            hitSomething = false
+            for i in [0...@blocks.length]
+                block = @blocks[i]
+                if not block.update(delta)
+                    toRemove.push i
+                if not hitSomething and @ball.intersects block
                     @ball.speed.y *= -1
                     @score += block.points
+                    block.alive = false
                     Sound.play 'blockBreak'
-                    break
+                    hitSomething = true
+
+            toRemove.sort (a,b) ->
+                0 if a == b
+                if a < b then 1 else -1
+            for i in toRemove
+                @blocks.splice i, 1
 
             if @blocks.length == 0
                 @resetLevel()

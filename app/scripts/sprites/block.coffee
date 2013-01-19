@@ -18,6 +18,32 @@ define [
             super()
 
             @points = Block.points
+            @breakingFrameTime = 2
+            @timeSinceBreak = 0
+
+        update: (delta) ->
+            if not @alive
+                @timeSinceBreak += delta
+                @currentBreakFrame = Math.floor @timeSinceBreak / @breakingFrameTime
+                return false if @currentBreakFrame > 3
+            return true
+            
+        draw: (ctx) ->
+            if not @alive and @currentBreakFrame?
+                brokenTexture = switch @currentBreakFrame
+                    when 0 then Block.breakTexture1
+                    when 1 then Block.breakTexture2
+                    when 2 then Block.breakTexture3
+                    when 3 then Block.breakTexture4
+                scale =
+                    x: brokenTexture.width / @texture.width * 2
+                    y: brokenTexture.height / @texture.height * 2
+                ctx.save()
+                ctx.globalAlpha = 1.0 / (@currentBreakFrame + 1)
+                ctx.drawImage brokenTexture, @x - brokenTexture.width / scale.x, @y - brokenTexture.height / scale.y, brokenTexture.width, brokenTexture.height
+                ctx.restore()
+            else
+                super ctx
 
     Block.colorBlock = (color, texture) ->
         Sprite.createTexture texture.width, texture.height, (ctx) ->
@@ -39,5 +65,10 @@ define [
     Block.redTexture = Block.colorBlock Block.colors.red, Block.texture
     Block.greenTexture = Block.colorBlock Block.colors.green, Block.texture
     Block.blueTexture = Block.colorBlock Block.colors.blue, Block.texture
+
+    Block.breakTexture1 = document.getElementById 'blockBreak1'
+    Block.breakTexture2 = document.getElementById 'blockBreak2'
+    Block.breakTexture3 = document.getElementById 'blockBreak3'
+    Block.breakTexture4 = document.getElementById 'blockBreak4'
 
     return Block
