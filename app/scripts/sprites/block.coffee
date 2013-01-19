@@ -31,10 +31,10 @@ define [
         draw: (ctx) ->
             if not @alive and @currentBreakFrame?
                 brokenTexture = switch @currentBreakFrame
-                    when 0 then Block.breakTexture1
-                    when 1 then Block.breakTexture2
-                    when 2 then Block.breakTexture3
-                    when 3 then Block.breakTexture4
+                    when 0 then Block.breakTexture1Colored[@color]
+                    when 1 then Block.breakTexture2Colored[@color]
+                    when 2 then Block.breakTexture3Colored[@color]
+                    when 3 then Block.breakTexture4Colored[@color]
                 scale =
                     x: brokenTexture.width / @texture.width * 2
                     y: brokenTexture.height / @texture.height * 2
@@ -67,8 +67,24 @@ define [
     Block.blueTexture = Block.colorBlock Block.colors.blue, Block.texture
 
     Block.breakTexture1 = document.getElementById 'blockBreak1'
+    Block.breakTexture1Colored =
+        red: Block.colorBlock Block.colors.red, Block.breakTexture1
+        green: Block.colorBlock Block.colors.green, Block.breakTexture1
+        blue: Block.colorBlock Block.colors.blue, Block.breakTexture1
     Block.breakTexture2 = document.getElementById 'blockBreak2'
+    Block.breakTexture2Colored =
+        red: Block.colorBlock Block.colors.red, Block.breakTexture2
+        green: Block.colorBlock Block.colors.green, Block.breakTexture2
+        blue: Block.colorBlock Block.colors.blue, Block.breakTexture2
     Block.breakTexture3 = document.getElementById 'blockBreak3'
+    Block.breakTexture3Colored =
+        red: Block.colorBlock Block.colors.red, Block.breakTexture3
+        green: Block.colorBlock Block.colors.green, Block.breakTexture3
+        blue: Block.colorBlock Block.colors.blue, Block.breakTexture3
     Block.breakTexture4 = document.getElementById 'blockBreak4'
+    Block.breakTexture4Colored =
+        red: Block.colorBlock Block.colors.red, Block.breakTexture4
+        green: Block.colorBlock Block.colors.green, Block.breakTexture4
+        blue: Block.colorBlock Block.colors.blue, Block.breakTexture4
 
     return Block
