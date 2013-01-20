@@ -92,9 +92,14 @@ define [
             @ball.y += @ball.speed.y * delta
 
             if @ball.y < 0
+                @ball.y = 0
                 @ball.speed.y *= -1
                 Sound.play 'ballHit'
             if @ball.x < 0 or @ball.x > @width - Ball.texture.width
+                if @ball.x < 0
+                    @ball.x = 0
+                else
+                    @ball.x = @width - Ball.texture.width
                 @ball.speed.x *= -1
                 Sound.play 'ballHit'
             if @ball.y > @height and not @resetting
