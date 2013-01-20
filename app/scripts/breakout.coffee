@@ -82,7 +82,13 @@ define [
                 @ball.speed.x *= -1
                 Sound.play 'ballHit'
             if @ball.y > @height
-                @resetPaddle()
+                @ball.speed =
+                    x: 0
+                    y: 0
+                @running = false
+                setTimeout =>
+                    @resetPaddle()
+                , 1000
                 return
 
             if @ball.intersects @paddle
