@@ -17,17 +17,19 @@ define [
             @backgroundTexture = document.getElementById 'background'
             @width = @canvas.width - @scorePanelWidth
             @height = @canvas.height
-            @screen = 'title'
             @resetLevel()
+            @screen = 'title'
 
         resetLevel: ->
+            @blocks = []
             for cols in [0...@blockCols]
                 for rows in [0...@blockRows]
                     x = 20 + cols * Block.texture.width
                     y = 20 + rows * Block.texture.height
                     @blocks.push new Block x, y
+            @lives = 4
             @resetPaddle()
-            @lives = 3
+            @score = 0
 
         resetPaddle: ->
             if not @paddle
@@ -39,8 +41,7 @@ define [
             if @lives > 0
                 @lives -= 1
             else
-                @score = 0
-                @lives = 3
+                @screen = 'gameover'
 
         addBonusBlock: ->
             index = Math.floor(Math.random() * @blocks.length)
@@ -61,7 +62,11 @@ define [
                         @screen = 'game'
                         # Prevent the ball from launching right away
                         @mouse.leftButton = false
-                when 'gameover' then false
+                when 'gameover'
+                    if @mouse.leftButton
+                        @screen = 'title'
+                        @resetLevel()
+                        @mouse.leftButton = false
                 else @gameUpdate delta
 
         gameUpdate: (delta) ->
@@ -127,7 +132,7 @@ define [
                 @blocks.splice i, 1
 
             if @blocks.length == 0
-                @resetLevel()
+                @screen = 'gameover'
                 return
 
         draw: ->
@@ -141,7 +146,7 @@ define [
 
             switch @screen
                 when 'title' then @drawTitle()
-                when 'gameover' then false
+                when 'gameover' then @drawGameOver()
 
         drawScorePanel: ->
             @ctx.save()
@@ -161,9 +166,7 @@ define [
             @ctx.fillText @lives, @canvas.width - @scorePanelWidth / 2, 250
             @ctx.restore()
 
-        drawTitle: ->
-            width = 300
-            height = 150
+        drawFrame: (width, height) ->
             @ctx.save()
             @ctx.globalAlpha = .75
             @ctx.fillStyle = 'rgb(0, 0, 0)'
@@ -173,6 +176,13 @@ define [
             @ctx.strokeStyle = 'rgb(0, 0, 0)'
             @ctx.lineWidth = 4
             @ctx.strokeRect @canvas.width / 2 - width / 2 + 2, @canvas.height / 2 - height / 2 + 2, width, height
+            @ctx.restore()
+
+        drawTitle: ->
+            width = 300
+            height = 150
+            @drawFrame width, height
+            @ctx.save()
             @ctx.textAlign = 'center'
             @ctx.font = '32pt sans-serif'
             @ctx.fillText 'Breakout!', @canvas.width / 2, @canvas.height / 2 - height / 2 + 50
@@ -182,4 +192,21 @@ define [
             @ctx.font = '20pt sans-serif'
             @ctx.fillStyle = 'rgb(255, 255, 255)'
             @ctx.fillText 'New Game', @canvas.width / 2, @canvas.height / 2 - height / 2 + 100
+            @ctx.restore()
+
+        drawGameOver: ->
+            width = 300
+            height = 150
+            @drawFrame width, height
+            @ctx.save()
+            @ctx.textAlign = 'center'
+            @ctx.font = '32pt sans-serif'
+            @ctx.fillText 'Game Over', @canvas.width / 2, @canvas.height / 2 - height / 2 + 50
+            @ctx.font = '20pt sans-serif'
+            @ctx.textAlign = 'left'
+            scoreSize = @ctx.measureText "Your score: #{ @score }"
+            @ctx.fillText "Your score: ", @canvas.width / 2 - scoreSize.width / 2, @canvas.height / 2 - height / 2 + 100
+            @ctx.textAlign = 'right'
+            @ctx.fillStyle = 'rgb(4, 102, 175)'
+            @ctx.fillText @score, @canvas.width / 2 + scoreSize.width / 2, @canvas.height / 2 - height / 2 + 100
             @ctx.restore()
