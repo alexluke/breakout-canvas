@@ -97,12 +97,13 @@ define [
             if @ball.x < 0 or @ball.x > @width - Ball.texture.width
                 @ball.speed.x *= -1
                 Sound.play 'ballHit'
-            if @ball.y > @height
+            if @ball.y > @height and not @resetting
                 @ball.speed =
                     x: 0
                     y: 0
-                @running = false
+                @resetting = true
                 setTimeout =>
+                    @resetting = false
                     @resetPaddle()
                 , 1000
                 return
