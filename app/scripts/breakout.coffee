@@ -17,6 +17,7 @@ define [
             @backgroundTexture = document.getElementById 'background'
             @width = @canvas.width - @scorePanelWidth
             @height = @canvas.height
+            @screen = 'title'
             @resetLevel()
 
         resetLevel: ->
@@ -54,6 +55,16 @@ define [
             return
 
         update: (delta) ->
+            switch @screen
+                when 'title'
+                    if @mouse.leftButton
+                        @screen = 'game'
+                        # Prevent the ball from launching right away
+                        @mouse.leftButton = false
+                when 'gameover' then false
+                else @gameUpdate delta
+
+        gameUpdate: (delta) ->
             @paddle.x = @mouse.x - Paddle.texture.width / 2
 
             if @paddle.x < 0
@@ -128,6 +139,10 @@ define [
 
             @drawScorePanel()
 
+            switch @screen
+                when 'title' then @drawTitle()
+                when 'gameover' then false
+
         drawScorePanel: ->
             @ctx.save()
             @ctx.clearRect @canvas.width - @scorePanelWidth, 0, @scorePanelWidth, @canvas.height
@@ -144,7 +159,27 @@ define [
             @ctx.fillStyle = 'rgb(4, 102, 175)'
             @ctx.fillText @score, @canvas.width - @scorePanelWidth / 2, 100
             @ctx.fillText @lives, @canvas.width - @scorePanelWidth / 2, 250
+            @ctx.restore()
 
+        drawTitle: ->
+            width = 300
+            height = 150
+            @ctx.save()
+            @ctx.globalAlpha = .75
+            @ctx.fillStyle = 'rgb(0, 0, 0)'
+            @ctx.fillRect 0, 0, @canvas.width, @canvas.height
+            @ctx.globalAlpha = 1
+            @ctx.clearRect @canvas.width / 2 - width / 2, @canvas.height / 2 - height / 2, width, height
+            @ctx.strokeStyle = 'rgb(0, 0, 0)'
+            @ctx.lineWidth = 4
+            @ctx.strokeRect @canvas.width / 2 - width / 2 + 2, @canvas.height / 2 - height / 2 + 2, width, height
+            @ctx.textAlign = 'center'
+            @ctx.font = '32pt sans-serif'
+            @ctx.fillText 'Breakout!', @canvas.width / 2, @canvas.height / 2 - height / 2 + 50
 
-
+            @ctx.fillStyle = 'rgb(4, 102, 175)'
+            @ctx.fillRect @canvas.width / 2 - 80, @canvas.height / 2 - height / 2 + 70, 160, 40
+            @ctx.font = '20pt sans-serif'
+            @ctx.fillStyle = 'rgb(255, 255, 255)'
+            @ctx.fillText 'New Game', @canvas.width / 2, @canvas.height / 2 - height / 2 + 100
             @ctx.restore()
