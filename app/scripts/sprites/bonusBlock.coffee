@@ -10,7 +10,7 @@ define [
             return bonus
 
         constructor: (@x, @y, color) ->
-            super(@x, @y)
+            super(@x, @y, color)
             @texture = switch color
                 when 'red' then BonusBlock.redTexture
                 when 'green' then BonusBlock.greenTexture
