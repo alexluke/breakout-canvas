@@ -4,7 +4,7 @@ define [
     'sprites/paddle'
     'sprites/ball'
     'sprites/block'
-    'sprites/bonusblock'
+    'sprites/bonusBlock'
 ], (Game, Sound, Paddle, Ball, Block, BonusBlock) ->
     class Breakout extends Game
         init: ->
