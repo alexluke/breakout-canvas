@@ -58,12 +58,43 @@ define [
         update: (delta) ->
             switch @screen
                 when 'title'
+                    if not @highScores?
+                        if localStorage
+                            builtinScores = [
+                                {'name': 'Dollie', 'score': 50}
+                                {'name': 'Erik', 'score': 40}
+                                {'name': 'Neva', 'score': 30}
+                                {'name': 'Tabatha', 'score': 20}
+                                {'name': 'Lance', 'score': 10}
+                            ]
+
+                            localScores = JSON.parse localStorage.getItem 'highScores'
+                            if not localScores?
+                                localScores = []
+                            @highScores = builtinScores.concat localScores
+                            @highScores.sort (a,b) ->
+                                0 if a.score == b.score
+                                if a.score < b.score then 1 else -1
+                            @highScores = @highScores.slice 0, 5
+                        else
+                            @highScores = []
                     if @mouse.leftButton
                         @screen = 'game'
                         # Prevent the ball from launching right away
                         @mouse.leftButton = false
                 when 'gameover'
                     if @mouse.leftButton
+                        if localStorage
+                            name = prompt 'Enter your name'
+                            if name
+                                localScores = JSON.parse localStorage.getItem 'highScores'
+                                if not localScores
+                                    localScores = []
+                                localScores.push
+                                    name: name
+                                    score: @score
+                                localStorage.setItem 'highScores', JSON.stringify localScores
+                                @highScores = null
                         @screen = 'title'
                         @resetLevel()
                         @mouse.leftButton = false
@@ -186,7 +217,7 @@ define [
 
         drawTitle: ->
             width = 300
-            height = 150
+            height = 400
             @drawFrame width, height
             @ctx.save()
             @ctx.textAlign = 'center'
@@ -198,6 +229,21 @@ define [
             @ctx.font = '20pt sans-serif'
             @ctx.fillStyle = 'rgb(255, 255, 255)'
             @ctx.fillText 'New Game', @canvas.width / 2, @canvas.height / 2 - height / 2 + 100
+
+            if @highScores?
+                @ctx.font = '20pt sans-serif'
+                @ctx.fillStyle = 'rgb(0, 0, 0)'
+                @ctx.fillText 'High Scores:', @canvas.width / 2, @canvas.height / 2 - height / 2 + 175
+                @ctx.font = '16pt sans-serif'
+                x = @canvas.width / 2 - 110
+                y = @canvas.height / 2 - height / 2 + 220
+                for hs in @highScores
+                    @ctx.textAlign = 'left'
+                    @ctx.fillText hs.name, x, y
+                    @ctx.textAlign = 'right'
+                    @ctx.fillText hs.score, x + 220, y
+                    y += 35
+
             @ctx.restore()
 
         drawGameOver: ->
